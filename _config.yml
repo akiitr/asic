@@ -6,3 +6,9 @@ url: https://akiitr.github.io/asic
 
 aux_links:
   Template Repository: https://akiitr.github.io/asic
+
+# Mermaid: for flow charts
+mermaid:
+  # Version of mermaid library
+  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
+  version: "11.4.1"
