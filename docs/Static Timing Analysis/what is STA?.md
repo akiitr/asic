@@ -1,3 +1,8 @@
+---
+title: what is STA?
+parent: Static Timing Analysis
+---
+
 # Static Timing Analysis (STA): A Comprehensive Guide
 
 **Table of Contents**
