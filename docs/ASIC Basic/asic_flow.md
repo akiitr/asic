@@ -1,7 +1,6 @@
 ---
-title: asic_flow
-parent: ASIC DESIGN FLOW
-nav_order: 2
+title: ASIC Design Flow
+parent: ASIC BASIC
 ---
 
 # ASIC Design Flow: A Comprehensive Guide
