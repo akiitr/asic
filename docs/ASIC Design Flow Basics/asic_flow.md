@@ -1,5 +1,6 @@
 ---
 title: asic_flow
+parent: ASIC DESIGN FLOW
 nav_order: 2
 ---
 
