@@ -1,6 +1,6 @@
 ---
 title: "Power Delivery Networks (PDN) in ASIC Design"
-parent: ASIC
+parent: PDN
 ---
 
 # Power Delivery Networks (PDN) in ASIC Design: A Detailed Analysis
