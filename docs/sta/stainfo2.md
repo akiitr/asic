@@ -207,43 +207,43 @@ graph TD
     E --> B;
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style D fill:#ccf,stroke:#333,stroke-width:2px
-     style C fill:#9cf,stroke:#333,stroke-width:2px
-       style E fill:#fcc,stroke:#333,stroke-width:2px
+    style C fill:#9cf,stroke:#333,stroke-width:2px
+    style E fill:#fcc,stroke:#333,stroke-width:2px
     subgraph "Inputs for Analysis"
-      style A fill:#f9f,stroke:#333,stroke-width:2px
-        A1[Gate-Level Netlist]
-        A2[SDC Constraints]
-        A3[Timing Libraries]
-         A -- A1
-         A -- A2
-         A -- A3
+        style A fill:#f9f,stroke:#333,stroke-width:2px
+        A1(Gate-Level Netlist)
+        A2(SDC Constraints)
+        A3(Timing Libraries)
+        A --> A1
+        A --> A2
+        A --> A3
     end
     subgraph "Inputs for ECO"
-      style E fill:#fcc,stroke:#333,stroke-width:2px
-        E1[ECO Script]
-        E2[Placement/Routing Data]
-         E -- E1
-          E -- E2
-      end
-      subgraph "STA Engine Analysis"
+        style E fill:#fcc,stroke:#333,stroke-width:2px
+        E1(ECO Script)
+        E2(Placement/Routing Data)
+        E --> E1
+        E --> E2
+    end
+    subgraph "STA Engine Analysis"
         style B fill:#cdf,stroke:#333,stroke-width:2px
-        B1[Path Enumeration]
-        B2[Delay Calculation]
-        B3[Timing Checks]
-           B -- B1
-           B -- B2
-           B -- B3
-      end
-      subgraph "Analysis Results"
+        B1(Path Enumeration)
+        B2(Delay Calculation)
+        B3(Timing Checks)
+        B --> B1
+        B --> B2
+        B --> B3
+    end
+    subgraph "Analysis Results"
         style C fill:#9cf,stroke:#333,stroke-width:2px
-          C1[Setup/Hold Violations]
-          C2[Path Delays]
-          C3[Slack Values]
-           C -- C1
-           C -- C2
-           C -- C3
-      end
-```
+        C1(Setup/Hold Violations)
+        C2(Path Delays)
+        C3(Slack Values)
+        C --> C1
+        C --> C2
+        C --> C3
+    end
+    ```
 
 *   **Inputs:** Gate-level netlist, SDC timing constraints, and timing libraries.
 *   **Analysis:** Path enumeration, delay calculation, and setup/hold time checks.
