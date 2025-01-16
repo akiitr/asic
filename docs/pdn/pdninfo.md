@@ -1,202 +1,279 @@
 ---
-title: what is PDN?
-parent: PDN
+title: "Power Delivery Networks (PDN) in ASIC Design"
+parent: ASIC
 ---
 
-# Power Delivery Network (PDN) Design for System-on-Chip (SoC)
+# Power Delivery Networks (PDN) in ASIC Design: A Detailed Analysis
 
-**Table of Contents**
+## Table of Contents
 
-1. [Introduction](#introduction)
-2. [PDN Fundamentals](#pdn-fundamentals)
-    *   [What is a PDN?](#what-is-a-pdn)
-    *   [Why is PDN Design Important?](#why-is-pdn-design-important)
-    *   [PDN Components](#pdn-components)
-3. [PDN Design Goals and Challenges](#pdn-design-goals-and-challenges)
-    *   [Low Impedance](#low-impedance)
-    *   [IR Drop Minimization](#ir-drop-minimization)
-    *   [Signal Integrity](#signal-integrity)
+1.  [Introduction to Power Delivery Networks (PDN)](#introduction-to-power-delivery-networks-pdn)
+2.  [Importance of PDN](#importance-of-pdn)
+    *   [Impact on Performance](#impact-on-performance)
+    *   [Impact on Reliability](#impact-on-reliability)
+    *   [Impact on Power Consumption](#impact-on-power-consumption)
+3.  [PDN Components and Architecture](#pdn-components-and-architecture)
+    *   [Power and Ground Pads](#power-and-ground-pads)
+    *   [Power and Ground Rings](#power-and-ground-rings)
+    *   [Power Straps and Meshes](#power-straps-and-meshes)
+    *   [Via Structures](#via-structures)
+    *   [Decoupling Capacitors (Decaps)](#decoupling-capacitors-decaps)
+4.  [PDN Design Considerations](#pdn-design-considerations)
+    *   [IR Drop Analysis](#ir-drop-analysis)
+        *   [Static IR Drop](#static-ir-drop)
+        *   [Dynamic IR Drop](#dynamic-ir-drop)
     *   [Electromigration (EM)](#electromigration-em)
-    *   [Thermal Management](#thermal-management)
-4. [PDN Design and Analysis Flow](#pdn-design-and-analysis-flow)
-    *   [Chip Power Requirements](#chip-power-requirements)
-    *   [Package Selection](#package-selection)
-    *   [On-Die PDN Design](#on-die-pdn-design)
-        *   [Power Grid Structure](#power-grid-structure)
-        *   [Decoupling Capacitors (Decaps)](#decoupling-capacitors-decaps)
-    *   [Static IR Drop Analysis](#static-ir-drop-analysis)
-    *   [Dynamic Voltage Drop (DVD) Analysis](#dynamic-voltage-drop-dvd-analysis)
-    *   [Electromigration (EM) Analysis](#electromigration-em-analysis)
-    *   [Thermal Analysis](#thermal-analysis)
-    *   [Chip-Package-Board Co-Design](#chip-package-board-co-design)
-5. [Low-Power Design Techniques Affecting PDN](#low-power-design-techniques-affecting-pdn)
-    *   [Clock Gating](#clock-gating)
+    *   [Inductance and Impedance](#inductance-and-impedance)
+        *   [Target Impedance](#target-impedance)
+    *   [Resonance](#resonance)
+    *   [Simultaneous Switching Noise (SSN)](#simultaneous-switching-noise-ssn)
+5.  [PDN Analysis and Verification](#pdn-analysis-and-verification)
+    *   [Simulation Tools](#simulation-tools)
+    *   [PDN Modeling Techniques](#pdn-modeling-techniques)
+    *   [Verification Methodologies](#verification-methodologies)
+    *   [PDN Analysis Flow](#pdn-analysis-flow)
+6.  [Advanced PDN Techniques](#advanced-pdn-techniques)
+    *   [Adaptive Voltage Scaling (AVS)](#adaptive-voltage-scaling-avs)
     *   [Power Gating](#power-gating)
-    *   [Dynamic Voltage and Frequency Scaling (DVFS)](#dynamic-voltage-and-frequency-scaling-dvfs)
-    *   [Multi-Voltage Design](#multi-voltage-design)
-6. [Tools and Vendors](#tools-and-vendors)
-7. [Conclusion](#conclusion)
+    *   [On-Chip Voltage Regulators](#on-chip-voltage-regulators)
+7.  [Industry Practices and Tools](#industry-practices-and-tools)
+    *   [Power Analysis Tools](#power-analysis-tools)
+    *   [PDN Verification Tools](#pdn-verification-tools)
+    *   [Design Methodologies](#design-methodologies)
+8.  [Conclusion](#conclusion)
 
-## Introduction
+## Introduction to Power Delivery Networks (PDN)
 
-The **Power Delivery Network (PDN)** is a critical aspect of System-on-Chip (SoC) design. It's responsible for distributing power from the external voltage regulators to all the components on the chip, including the core logic, I/Os, and memory. A well-designed PDN is essential for ensuring reliable operation, meeting performance targets, and achieving energy efficiency. This document provides a comprehensive overview of PDN design for SoCs, covering its fundamentals, design goals, challenges, analysis flow, and the impact of low-power design techniques.
+A Power Delivery Network (PDN) is the intricate system of metal interconnects, vias, and capacitors designed to distribute power from the external power source to all the active and passive components on an integrated circuit (IC). The primary function of a PDN is to provide a stable and reliable power supply to the logic circuitry while minimizing voltage fluctuations, noise, and power losses. A well-designed PDN is critical for ensuring the correct functionality, performance, and reliability of an ASIC. The PDN is a distributed network consisting of multiple metallic layers and multiple components connected in a network. The goal of this network is to deliver a constant supply of power with minimal variations.
 
-## PDN Fundamentals
+## Importance of PDN
 
-### What is a PDN?
+The PDN plays a vital role in the functionality and reliability of an ASIC. An inadequate PDN can lead to a variety of issues.
 
-A **Power Delivery Network (PDN)** is the complete system that delivers power from the voltage source to the transistors on an integrated circuit. It encompasses the on-chip power grid, package connections, and the board-level power distribution network.
+### Impact on Performance
 
-### Why is PDN Design Important?
+*   **Voltage Drops:** Insufficiently designed PDNs can result in voltage drops (IR drop) across the chip. This can cause transistors to operate at lower voltages, leading to reduced performance (reduced switching speed) and logic errors. This variation of voltage also leads to timing violations.
+*   **Signal Integrity:** Variations in the power supply can cause noise in the digital and analog circuits which affects their performance. A noisy PDN can make the circuit to be more susceptible to errors in the signals.
+*   **Timing Violations:** Voltage variations due to poorly designed PDN can change the timing of the circuit resulting in setup and hold time violations
 
-*   **Reliability:** A poorly designed PDN can lead to voltage drops (IR drop) and ground bounce, causing logic errors and chip failures.
-*   **Performance:** Voltage drops can slow down circuits, impacting the chip's performance and potentially causing timing violations.
-*   **Power Consumption:** A well-designed PDN minimizes power losses in the distribution network, improving energy efficiency.
-*   **Signal Integrity:** PDN noise can couple to signal lines, degrading signal integrity and causing data corruption.
-*   **Electromigration (EM):** High current densities in the PDN can lead to electromigration, a phenomenon that causes metal voids and eventually open circuits, reducing chip lifetime.
+### Impact on Reliability
 
-### PDN Components
+*   **Electromigration (EM):** High current densities in the PDN can cause electromigration, which can lead to metal interconnect failure over time. This can reduce the long-term reliability of the chip and can eventually lead to functional failure.
+*   **Thermal Issues:** Uneven power distribution can result in hot spots on the chip which can lead to reduced reliability and also can lead to functional failure. In worst case scenarios it can even cause physical damage.
+*   **Device Degradation:** Variations in voltage and current levels can cause degradation of devices over time.
 
-A typical PDN consists of the following components:
+### Impact on Power Consumption
 
-*   **Voltage Regulator Module (VRM):** An external component on the board that provides the regulated voltage supply.
-*   **Printed Circuit Board (PCB):** Power planes and traces on the PCB distribute power from the VRM to the package.
-*   **Package:** The package (e.g., Ball Grid Array (BGA), Flip Chip) connects the chip to the PCB. It contains power and ground balls/bumps and internal routing.
-*   **On-Chip Power Grid:** A network of metal lines and vias that distributes power across the chip. It typically consists of multiple metal layers forming a mesh or grid structure.
-*   **Decoupling Capacitors (Decaps):** Capacitors placed on-chip, on-package, and on-board to provide a local source of charge and reduce voltage fluctuations.
+*   **Leakage Current:** Variations in the supply voltage can increase the leakage currents in the transistors. These currents lead to static power consumption in the chip.
+*   **Dynamic Power:** Poorly designed PDNs can increase the dynamic power consumption due to higher switching current requirements. If the current drawn by the PDN is not delivered efficiently then it leads to excess power consumption.
+*   **Inefficient Power Delivery:** Power wasted due to resistive losses within the PDN contribute to higher overall power consumption.
 
-## PDN Design Goals and Challenges
+## PDN Components and Architecture
 
-### Low Impedance
+The PDN is composed of various interconnected components which form a network from the power input pad to the various functional blocks in the chip.
 
-The PDN should have low impedance across a wide frequency range to minimize voltage fluctuations caused by switching currents. This requires careful design of the on-chip power grid, package, and board-level power distribution.
+### Power and Ground Pads
 
-### IR Drop Minimization
+*   **External Connection:** These are the points at which the power supply is connected to the chip. These pads have to be designed to withstand high voltage and current levels.
+*   **Pad Placement:** The location and number of pads influence the overall PDN design. Proper placement of pads at the periphery are needed to ensure proper connectivity to external power source.
+*   **Pad Types:** Various types of pads such as power, ground, and signal pads are required to facilitate the complete functioning of the chip.
 
-**IR drop** is the voltage drop across the PDN due to the resistance of the metal lines and vias. Excessive IR drop can cause logic errors and performance degradation. The goal is to keep the IR drop within acceptable limits (e.g., less than 5% of the supply voltage).
+### Power and Ground Rings
 
-### Signal Integrity
+*   **Perimeter Distribution:** These rings are placed along the periphery of the chip to provide an initial distribution of power across the die.
+*   **Low Resistance Paths:** Rings provide low-resistance paths for current flow and provide low impedance to the core circuits.
+*   **Layer Assignment:** The power and ground rings can be placed on the top most metal layers for optimal performance
 
-The PDN should be designed to minimize noise coupling to signal lines. This can be achieved through proper shielding, decoupling, and careful routing of power and signal lines.
+### Power Straps and Meshes
+
+*   **Grid Structure:** Power straps are usually routed vertically or horizontally in the form of grid to distribute power and ground across the entire chip area.
+*   **Mesh Structure:** Power mesh structures provide an interconnected network for power distribution and are useful in providing power to larger area.
+*   **Metal Layers:** Power straps and meshes use multiple metal layers to reduce resistance.
+*   **Layer Selection:** Straps and mesh can be selected in multiple metal layers in the design to reduce the overall impedance.
+
+### Via Structures
+
+*   **Layer Connections:** Vias are used to connect different metal layers in the PDN. These vias carry the power from top level routing to lower level routing and finally to the standard cells.
+*   **Via Redundancy:** Redundant vias are added to increase the current carrying capacity and also to improve reliability.
+*   **Via Resistance:** Vias have resistance and can cause a voltage drop, thus optimizing the number and type of vias used is necessary to achieve desired goals.
+
+### Decoupling Capacitors (Decaps)
+
+*   **Noise Reduction:** Decaps are placed near the logic blocks to reduce local noise and voltage fluctuations.
+*   **Charge Storage:** Decaps act as a local charge reservoir to supply current when the circuit is switching.
+*   **Capacitor Types:** Various types of capacitors are used with varying values and properties.
+*   **Placement:** Decaps are placed strategically across the chip. These decaps can also be integrated inside the standard cells.
+
+## PDN Design Considerations
+
+Designing an efficient PDN requires careful consideration of various parameters.
+
+### IR Drop Analysis
+
+IR drop is the voltage drop across the power grid due to resistance (R) and current (I).
+
+#### Static IR Drop
+
+*   **DC Analysis:** Static IR drop is analyzed under steady-state DC conditions.
+*   **Current Calculation:** The total DC current drawn by the circuit is calculated and then the voltage drop across the grid is analyzed.
+*   **Voltage Drop:** The voltage drop is calculated based on the resistance of the metal and the via structures.
+
+#### Dynamic IR Drop
+
+*   **Transient Analysis:** Dynamic IR drop is analyzed under transient conditions during switching activity of the circuit.
+*   **Switching Currents:** The dynamic currents drawn during switching are analyzed to determine the voltage variation in the power grid.
+*   **Worst-Case Analysis:** Analyzing for the worst case switching scenarios to ensure robust design.
 
 ### Electromigration (EM)
 
-**Electromigration** is the movement of metal atoms due to high current densities. It can cause voids or hillocks in the metal lines, leading to increased resistance or short circuits. PDN design must consider EM limits to ensure long-term reliability.
+*   **Current Density:** EM is a concern when high current densities in metal conductors cause movement of metal atoms, leading to open circuits.
+*   **Metal Thickness:** Proper metal width and thickness are selected for the metal routes so that they can withstand the high currents.
+*   **Via Design:** Via structures must be designed to support the current requirements to reduce the risk of EM related failures.
+*   **Lifetime Calculation:** The lifetime of metal interconnects are calculated based on the current densities.
 
-### Thermal Management
+### Inductance and Impedance
 
-The PDN generates heat due to the current flowing through its resistance. Proper thermal management is needed to dissipate this heat and prevent overheating, which can impact performance and reliability.
+*   **Inductive Effects:** Inductance in the power grid can cause voltage fluctuations due to changes in current.
+*   **Impedance:** The impedance of the PDN impacts how the power is delivered to different parts of the circuit. The impedance should be low.
+*   **Parasitic Extraction:** Extraction tools are used to estimate the parasitic inductance.
 
-## PDN Design and Analysis Flow
+#### Target Impedance
 
-### Chip Power Requirements
+*   **Low Impedance:** The target impedance of the PDN should be low enough to minimize voltage drops and keep the power distribution network stable.
+*   **Frequency Response:** The PDN impedance needs to be low across a wide frequency range.
+*   **Matching Impedance:** The PDN target impedance is carefully selected so that it does not cause resonance at any frequency.
 
-*   The first step is to estimate the total power consumption of the chip, including dynamic power (due to switching activity) and leakage power.
-*   Power estimation is typically done using power analysis tools that take into account the design's activity factors, operating frequency, and technology parameters.
+### Resonance
 
-### Package Selection
+*   **LC Circuits:** The PDN has inherent inductive and capacitive elements and can resonate at certain frequencies.
+*   **Peak Impedance:** Resonance leads to a peak in impedance which results in voltage variations.
+*   **Mitigation Techniques:** Proper decoupling with different capacitor values is needed to avoid resonance. The power and ground grid should be designed to minimize the impedance.
 
-*   The choice of package has a significant impact on PDN performance. Factors to consider include the number of power and ground balls/bumps, the package's internal routing, and its thermal characteristics.
-*   Flip-chip packages generally offer better PDN performance than wire-bond packages due to their lower inductance and higher density of connections.
+### Simultaneous Switching Noise (SSN)
 
-### On-Die PDN Design
+*   **Switching Currents:** SSN occurs when multiple outputs switch simultaneously, causing large current spikes in the PDN.
+*   **Voltage Fluctuations:** These current spikes lead to noise and voltage fluctuations in the power supply.
+*   **Decoupling:** Proper decoupling is required to reduce SSN.
 
-#### Power Grid Structure
+## PDN Analysis and Verification
 
-*   The on-chip power grid is typically designed as a mesh or grid structure using multiple metal layers.
-*   The grid's pitch (spacing between metal lines) and width are optimized to minimize resistance and IR drop while considering routing congestion.
-*   Power switches may be incorporated to enable power gating.
+Analyzing and verifying the PDN design is critical for achieving robust power delivery.
 
-#### Decoupling Capacitors (Decaps)
+### Simulation Tools
 
-*   **Decaps** are essential for reducing voltage fluctuations and providing a local source of charge during switching events.
-*   Different types of decaps are used, each with different characteristics:
-    *   **MOS decaps:** High capacitance density but higher leakage.
-    *   **Metal-Insulator-Metal (MIM) decaps:** Lower leakage but lower capacitance density.
-    *   **Metal-Oxide-Metal (MOM) decaps:** Offer a trade-off between capacitance density and leakage.
-*   Decaps placement is critical. They should be placed close to the switching circuits to minimize the loop inductance.
+*   **Power Analysis Tools:** Tools like Voltus (Cadence) and PowerArtist (Synopsys) are used to analyze power consumption.
+*   **Spice Simulators:** SPICE simulators such as HSPICE and Spectre are used for accurate simulation of the power grid under different conditions.
+*   **IR Drop Analysis Tools:** Tools such as Redhawk (Ansys) are used for IR drop analysis in power delivery networks.
 
-### Static IR Drop Analysis
+### PDN Modeling Techniques
 
-*   **Static IR drop analysis** calculates the voltage drop across the PDN under steady-state conditions (average current).
-*   It involves solving for the voltage distribution in the PDN using the resistance of the power grid and the average current drawn by each cell.
-*   **Tools:** Ansys RedHawk-SC, Cadence Voltus, Synopsys PrimeRail
+*   **Simplified Models:** Simplified RLC models can be used for initial analysis.
+*   **Full Chip Models:** Detailed models capture the full complexity of the PDN for accurate simulation.
+*   **Hierarchical Modeling:** Complex PDNs can be modeled hierarchically to reduce the complexity of the analysis.
 
-### Dynamic Voltage Drop (DVD) Analysis
+### Verification Methodologies
 
-*   **Dynamic Voltage Drop (DVD) analysis** simulates the transient voltage fluctuations caused by switching activity.
-*   It takes into account the dynamic current waveforms, the inductance and capacitance of the PDN, and the effect of decoupling capacitors.
-*   DVD analysis is more accurate than static IR drop analysis but also more computationally expensive.
-*   **Tools:** Ansys RedHawk-SC, Cadence Voltus, Synopsys PrimeRail
+*   **IR Drop Verification:** Ensuring voltage drops are within acceptable limits.
+*   **Electromigration Verification:** Checks to make sure the metal widths, via numbers and current densities are within the permissible limits and lifetime is achieved.
+*   **Impedance Verification:** Verify the PDN impedance is within target impedance values across the design.
+*   **SSN Verification:** Verifying that SSN is within acceptable limits.
 
-### Electromigration (EM) Analysis
+### PDN Analysis Flow
 
-*   **EM analysis** checks the current density in the power grid against the technology's EM limits.
-*   It identifies potential EM hotspots that need to be addressed through design modifications.
-*   **Tools:** Ansys RedHawk-SC, Cadence Voltus, Synopsys PrimeRail
+Here's a flow diagram outlining the PDN analysis process, including inputs and potential ECOs:
 
-### Thermal Analysis
+```mermaid
+graph TD
+    A[Netlist & Power Intent] --> B(PDN Synthesis);
+    B --> C{PDN Simulation Setup};
+    C --> D[PDN Analysis];
+    D --> E{Pass?};
+    E -- Yes --> F[PDN Verified];
+    E -- No --> G(PDN ECO);
+    G --> C;
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style F fill:#ccf,stroke:#333,stroke-width:2px
+    style D fill:#9cf,stroke:#333,stroke-width:2px
+     style G fill:#fcc,stroke:#333,stroke-width:2px
+    subgraph "Inputs for Analysis"
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+        A1[Netlist]
+        A2[Power Intent (UPF)]
+        A3[Technology Files]
+         A -- A1
+         A -- A2
+          A -- A3
+    end
+  subgraph "Inputs for ECO"
+      style G fill:#fcc,stroke:#333,stroke-width:2px
+        G1[ECO Script]
+        G2[Placement/Routing Data]
+        G -- G1
+        G -- G2
+      end
+    subgraph "PDN Simulation Setup"
+     style C fill:#cdf,stroke:#333,stroke-width:2px
+         C1[Simulation Parameters]
+         C2[PDN Model]
+          C -- C1
+          C -- C2
+   end
+    subgraph "Analysis Results"
+        style D fill:#9cf,stroke:#333,stroke-width:2px
+       D1[IR Drop Map]
+         D2[EM Violations]
+         D3[Impedance Plots]
+         D -- D1
+          D -- D2
+           D -- D3
+   end
+```
 
-*   **Thermal analysis** simulates the temperature distribution on the chip, considering the heat generated by the PDN and the logic circuits.
-*   It helps identify potential thermal hotspots and evaluate the effectiveness of the cooling solution.
-*   **Tools:** Ansys Icepak, Cadence Celsius Thermal Solver
+*   **Inputs:** Netlist, power intent (UPF), technology files, simulation parameters, and the PDN model.
+*   **Analysis:**  IR drop, electromigration, impedance, and SSN analysis.
+*   **ECOs:** If the analysis fails, the design is modified (ECO) and the analysis is run again.
 
-### Chip-Package-Board Co-Design
+## Advanced PDN Techniques
 
-*   PDN design should not be done in isolation. The chip, package, and board must be co-designed and co-analyzed to ensure optimal PDN performance.
-*   This involves:
-    *   **Package and board modeling:** Creating accurate models of the package and board parasitics.
-    *   **Co-simulation:** Simulating the chip, package, and board together to capture their interactions.
-    *   **Optimization:** Jointly optimizing the chip, package, and board PDN to meet the design goals.
+### Adaptive Voltage Scaling (AVS)
 
-## Low-Power Design Techniques Affecting PDN
-
-Several low-power design techniques can significantly impact the PDN:
-
-### Clock Gating
-
-*   **Clock gating** disables the clock signal to idle blocks, reducing dynamic power consumption.
-*   **Impact on PDN:** Clock gating reduces the average current drawn from the PDN but can also introduce current spikes when blocks are turned on or off.
+*   **Dynamic Voltage Adjustment:** AVS adjusts the supply voltage dynamically based on workload and performance requirements.
+*   **Power Savings:** AVS reduces the power consumption without compromising the performance by using an optimal voltage level.
+*   **Performance Optimization:** At low loads the voltage can be scaled down, while at higher workloads the voltage can be scaled up.
 
 ### Power Gating
 
-*   **Power gating** shuts off the power supply to inactive blocks, reducing both dynamic and leakage power.
-*   **Impact on PDN:** Power gating introduces significant inrush currents when blocks are powered up, requiring careful design of the power switches and decoupling capacitors.
-*   **Power switches:** Specialized transistors used to turn on/off power to a block. Design needs to consider the trade-off between switch size (impact on area and performance) and the ability to handle inrush currents.
+*   **Power Shutoff:** Power gating shuts off power to inactive blocks of the circuit, reducing the static power consumption.
+*   **Low Power Modes:** Used to implement multiple power modes, providing efficient power management.
+*   **Sleep and Active Modes:** Unused blocks are put to sleep mode to reduce power consumption.
 
-### Dynamic Voltage and Frequency Scaling (DVFS)
+### On-Chip Voltage Regulators
 
-*   **DVFS** dynamically adjusts the supply voltage and operating frequency based on the workload to optimize power consumption.
-*   **Impact on PDN:** DVFS requires the PDN to be stable across a wide range of voltage and frequency operating points.
+*   **Local Voltage Regulation:** On-chip voltage regulators provide precise voltage regulation locally, minimizing noise and variations.
+*   **Integration:** These regulators are integrated onto the chip, eliminating external components.
+*   **Multiple Voltage Levels:** Different blocks can use different voltages that are generated on chip using the voltage regulators.
 
-### Multi-Voltage Design
+## Industry Practices and Tools
 
-*   **Multi-voltage design** uses different supply voltages for different blocks on the chip to optimize power and performance.
-*   **Impact on PDN:** Multi-voltage design requires multiple power grids, which can complicate the PDN design and increase the risk of noise coupling between domains.
+### Power Analysis Tools
 
-## Tools and Vendors
+*   **Voltus (Cadence):** A comprehensive tool for power analysis, including static and dynamic power analysis.
+*   **PowerArtist (Synopsys):** Another industry-leading power analysis tool for estimating power.
+*   **RedHawk (Ansys):** Used for detailed IR drop and EM analysis, with good modeling capabilities.
 
-Several EDA (Electronic Design Automation) vendors provide tools for PDN design and analysis:
+### PDN Verification Tools
 
-*   **Ansys:**
-    *   **RedHawk-SC:** Industry-leading tool for full-chip power integrity and reliability analysis, including static and dynamic IR drop, electromigration, and thermal analysis.
-    *   **Totem:** Power integrity and noise analysis platform for analog, mixed-signal, and custom digital designs.
-    *   **PathFinder:** ESD (Electrostatic Discharge) analysis solution.
-    *   **Icepak:** Thermal analysis tool.
+*   **Voltus (Cadence):** Includes PDN analysis capabilities for verification.
+*   **RedHawk (Ansys):** Used for comprehensive PDN analysis, including IR drop, EM, and SSN.
+*   **Custom Tools:** Many companies also use their own custom built tools for PDN verification.
 
-*   **Cadence:**
-    *   **Voltus Fi Custom Power Integrity Solution:**  Power integrity signoff solution for transistor-level designs.
-    *   **Voltus Power Integrity Solution:** Full-chip power integrity analysis, including IR drop, EM, and thermal.
-    *   **Celsius Thermal Solver:** Thermal analysis and thermal-electrical co-simulation.
-    *   **Sigrity:**  Signal and power integrity analysis for packages and PCBs.
+### Design Methodologies
 
-*   **Siemens EDA:**
-    *   **Calibre xACT:** Parasitic extraction tool.
-    *   **HyperLynx:** Signal integrity, power integrity, and thermal analysis for PCBs.
-
-*   **Synopsys:**
-    *   **PrimeRail:**  Rail analysis solution for IR drop and electromigration, integrated with the PrimeTime platform.
+*   **Early Planning:** Planning the PDN early in the design process using a top down approach.
+*   **Hierarchical Design:** Designing the PDN hierarchically with increasing details at each level.
+*   **Iteration:** Iterating over the design based on analysis and verification results.
+*   **Collaboration:** Close collaboration between physical design and power integrity engineers is essential.
 
 ## Conclusion
 
-PDN design is a crucial aspect of modern SoC design, impacting reliability, performance, and power efficiency. This document has provided a comprehensive overview of PDN design, covering its fundamentals, design goals, analysis flow, and the impact of low-power techniques. As SoC designs become more complex and technology nodes continue to shrink, PDN design will become even more challenging. A thorough understanding of PDN principles and the use of advanced analysis tools will be essential for creating robust and high-performance SoCs.
+A well designed Power Delivery Network (PDN) is essential for the reliable, high-performance, and efficient operation of modern ASICs. This detailed exploration of PDN components, design considerations, analysis, and advanced techniques provides a comprehensive understanding of this critical aspect of ASIC design. Understanding the design constraints and requirements of the PDN and also the analysis and verification methods is required for all ASIC designs. The PDN design has to be well thought out and implemented to ensure the correct operation of the ASIC under all operating conditions.
