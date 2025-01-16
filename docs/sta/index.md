@@ -1,4 +1,4 @@
 ---
-title: Static Timing Analysis
-nav_order: 5
+title: STA
+nav_order: 7
 ---

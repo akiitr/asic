@@ -1,6 +1,6 @@
 ---
 title: what is STA?
-parent: sta
+parent: STA
 ---
 
 # Static Timing Analysis (STA): A Comprehensive Guide

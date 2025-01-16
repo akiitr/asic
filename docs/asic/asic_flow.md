@@ -1,6 +1,6 @@
 ---
 title: ASIC Design Flow
-parent: basics
+parent: ASIC
 ---
 
 # ASIC Design Flow: A Comprehensive Guide
