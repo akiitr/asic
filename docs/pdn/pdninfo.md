@@ -1,6 +1,6 @@
 ---
 title: what is PDN?
-parent: Power Delivery Network
+parent: pdn
 ---
 
 # Power Delivery Network (PDN) Design for System-on-Chip (SoC)
