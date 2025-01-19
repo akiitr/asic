@@ -349,14 +349,15 @@ graph LR
 
 ```mermaid
 graph LR
-    A[Source Clock(Launch)] --> B(Launch Clock Network Delay);
+graph LR
+    A[Source Clock Launch] --> B(Launch Clock Network Delay);
      B --> C(Clock to Q Delay);
     C --> D(Path Delay);
-     D --> E[Data Arrival Time];
-     F[Source Clock(Capture)] --> G(Capture Clock Network Delay);
+     D --> E(Data Arrival Time);
+     F[Source Clock Capture] --> G(Capture Clock Network Delay);
       G --> H(Library Setup time);
       H --> I(Clock Uncertainty);
-      I --> J[Data Required Time];
+      I --> J(Data Required Time);
     style A fill:#ccf,stroke:#333,stroke-width:2px
         style F fill:#ccf,stroke:#333,stroke-width:2px
     linkStyle 0,1,2,3,4,5,6,7 stroke-dasharray: 5 5
@@ -370,14 +371,14 @@ graph LR
 
 ```mermaid
 graph LR
-    A[Source Clock(Launch)] --> B(Launch Clock Network Delay);
+    A[Source Clock Launch] --> B(Launch Clock Network Delay);
      B --> C(Clock to Q Delay);
     C --> D(Path Delay);
-     D --> E[Data Arrival Time];
-     F[Source Clock(Capture)] --> G(Capture Clock Network Delay);
+     D --> E(Data Arrival Time);
+     F[Source Clock Capture] --> G(Capture Clock Network Delay);
       G --> H(Library Hold time);
       H --> I(Clock Uncertainty);
-      I --> J[Data Required Time];
+      I --> J(Data Required Time);
     style A fill:#ccf,stroke:#333,stroke-width:2px
         style F fill:#ccf,stroke:#333,stroke-width:2px
     linkStyle 0,1,2,3,4,5,6,7 stroke-dasharray: 5 5
