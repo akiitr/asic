@@ -943,7 +943,7 @@ graph LR
 
 ```mermaid
 graph LR
-    A[Inverter W] --> B(Inverter (aW));
+    A[Inverter W] --> B(Inverter aW);
     style A fill:#ccf,stroke:#333,stroke-width:2px
 ```
 
