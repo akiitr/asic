@@ -349,7 +349,6 @@ graph LR
 
 ```mermaid
 graph LR
-graph LR
     A[Source Clock Launch] --> B(Launch Clock Network Delay);
      B --> C(Clock to Q Delay);
     C --> D(Path Delay);
