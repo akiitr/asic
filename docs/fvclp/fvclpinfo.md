@@ -152,37 +152,37 @@ graph TD
     style G fill:#ccf,stroke:#333,stroke-width:2px
     subgraph "Testbench Development"
         style B fill:#cdf,stroke:#333,stroke-width:2px
-        B1[Driver]
-        B2[Monitor]
-         B3[Checker]
-        B4[Environment]
-         B -- B1
-         B -- B2
-         B -- B3
-         B -- B4
+        B1(Driver)
+        B2(Monitor)
+         B3(Checker)
+        B4(Environment)
+         B --> B1
+         B --> B2
+         B --> B3
+         B --> B4
     end
   subgraph "Stimulus Generation"
      style C fill:#9cf,stroke:#333,stroke-width:2px
-         C1[Randomization]
-         C2[Constraints]
-          C -- C1
-          C -- C2
+         C1(Randomization)
+         C2(Constraints)
+          C --> C1
+          C --> C2
   end
      subgraph "Verification Results"
          style D fill:#9cf,stroke:#333,stroke-width:2px
-         D1[Waveforms]
-         D2[Logs]
-         D3[Assertions]
-         D -- D1
-          D -- D2
-          D -- D3
+         D1(Waveforms)
+         D2(Logs)
+         D3(Assertions)
+         D --> D1
+          D --> D2
+          D --> D3
    end
     subgraph "Coverage Analysis"
         style E fill:#cdf,stroke:#333,stroke-width:2px
-          E1[Functional Coverage]
-          E2[Code Coverage]
-          E -- E1
-           E -- E2
+          E1(Functional Coverage)
+          E2(Code Coverage)
+          E --> E1
+           E --> E2
       end
 ```
 
@@ -266,19 +266,19 @@ graph TD
      style A fill:#f9f,stroke:#333,stroke-width:2px
     style E fill:#ccf,stroke:#333,stroke-width:2px
     style F fill:#fcc,stroke:#333,stroke-width:2px
-     subgraph "Property Specification"
+    subgraph "Property Specification"
          style B fill:#9cf,stroke:#333,stroke-width:2px
-         B1[Assertions]
-         B2[Temporal Logic]
-          B -- B1
-          B -- B2
+         B1(Assertions)
+         B2(Temporal Logic)
+          B --> B1
+          B --> B2
      end
      subgraph "Verification Results"
         style C fill:#cdf,stroke:#333,stroke-width:2px
-        C1[Proof]
-         C2[Counter Examples]
-          C -- C1
-          C -- C2
+        C1(Proof)
+         C2(Counter Examples)
+          C --> C1
+          C --> C2
       end
 ```
 
@@ -368,24 +368,24 @@ graph TD
      style F fill:#fcc,stroke:#333,stroke-width:2px
     subgraph "Inputs to UPF Flow"
      style A fill:#f9f,stroke:#333,stroke-width:2px
-       A1[RTL Design]
-       A2[UPF Specification]
-        A -- A1
-        A -- A2
+       A1(RTL Design)
+       A2(UPF Specification)
+        A --> A1
+        A --> A2
     end
     subgraph "Power Aware Simulation"
         style B fill:#cdf,stroke:#333,stroke-width:2px
-        B1[Power Mode Transitions]
-        B2[Power Domain Behavior]
-        B -- B1
-        B -- B2
+        B1(Power Mode Transitions)
+        B2(Power Domain Behavior)
+        B --> B1
+        B --> B2
      end
       subgraph "Verification Results"
        style C fill:#9cf,stroke:#333,stroke-width:2px
-       C1[Rule Violations]
-       C2[Power Analysis]
-       C -- C1
-        C -- C2
+       C1(Rule Violations)
+       C2(Power Analysis)
+       C --> C1
+        C --> C2
       end
 ```
 

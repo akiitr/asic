@@ -194,38 +194,38 @@ graph TD
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style F fill:#ccf,stroke:#333,stroke-width:2px
     style D fill:#9cf,stroke:#333,stroke-width:2px
-     style G fill:#fcc,stroke:#333,stroke-width:2px
+    style G fill:#fcc,stroke:#333,stroke-width:2px
     subgraph "Inputs for Analysis"
     style A fill:#f9f,stroke:#333,stroke-width:2px
-        A1[Netlist]
-        A2[Power Intent (UPF)]
-        A3[Technology Files]
-         A -- A1
-         A -- A2
-          A -- A3
+        A1(Netlist)
+        A2(Power Intent UPF)
+        A3(Technology Files)
+        A --> A1
+        A --> A2
+        A --> A3
     end
   subgraph "Inputs for ECO"
       style G fill:#fcc,stroke:#333,stroke-width:2px
-        G1[ECO Script]
-        G2[Placement/Routing Data]
-        G -- G1
-        G -- G2
+        G1(ECO Script)
+        G2(Placement/Routing Data)
+        G --> G1
+        G --> G2
       end
     subgraph "PDN Simulation Setup"
      style C fill:#cdf,stroke:#333,stroke-width:2px
-         C1[Simulation Parameters]
-         C2[PDN Model]
-          C -- C1
-          C -- C2
+         C1(Simulation Parameters)
+         C2(PDN Model)
+          C --> C1
+          C --> C2
    end
     subgraph "Analysis Results"
         style D fill:#9cf,stroke:#333,stroke-width:2px
-       D1[IR Drop Map]
-         D2[EM Violations]
-         D3[Impedance Plots]
-         D -- D1
-          D -- D2
-           D -- D3
+       D1(IR Drop Map)
+         D2(EM Violations)
+         D3(Impedance Plots)
+         D --> D1
+          D --> D2
+           D --> D3
    end
 ```
 
