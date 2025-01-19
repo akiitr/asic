@@ -933,8 +933,8 @@ graph LR
 
 ```mermaid
 graph LR
-    A[W (NMOS)] --> B(R);
-    C[2W (PMOS)] --> B;
+    A[W NMOS] --> B(R);
+    C[2W PMOS] --> B;
     style A fill:#ccf,stroke:#333,stroke-width:2px
     style C fill:#ccf,stroke:#333,stroke-width:2px
 ```
@@ -943,7 +943,7 @@ graph LR
 
 ```mermaid
 graph LR
-    A[Inverter (W)] --> B(Inverter (aW));
+    A[Inverter W] --> B(Inverter (aW));
     style A fill:#ccf,stroke:#333,stroke-width:2px
 ```
 
@@ -969,7 +969,7 @@ graph LR
 
 ```mermaid
 graph LR
-    A[Fanout (a)] --> B(Total Delay D);
+    A[Fanout a] --> B(Total Delay D);
      style A fill:#ccf,stroke:#333,stroke-width:2px
 ```
 
